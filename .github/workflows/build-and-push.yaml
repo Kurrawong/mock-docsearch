@@ -7,7 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: mock-rag-index-image
+  # Use full repository name which includes the owner
+  IMAGE_NAME: ${{ github.repository }}  # This will be owner/repo-name
   IMAGE_TAG: test
 
 jobs:
@@ -33,18 +34,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           scanners: 'vuln'
 
-      # This step will be skipped in act but included for GitHub
-      - name: Log in to GitHub Container Registry
-        if: github.actor != 'nektos/act'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # This step will be skipped in act but included for GitHub
       - name: Push to GHCR
-        if: github.actor != 'nektos/act'
         run: |
           docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
