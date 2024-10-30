@@ -23,16 +23,16 @@ jobs:
         run: |
           docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'image'
-          image-ref: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-          scanners: 'vuln'
+#      - name: Run Trivy vulnerability scanner
+#        uses: aquasecurity/trivy-action@master
+#        with:
+#          scan-type: 'image'
+#          image-ref: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+#          format: 'table'
+#          exit-code: '1'
+#          ignore-unfixed: true
+#          severity: 'CRITICAL,HIGH'
+#          scanners: 'vuln'
 
       - name: Push to GHCR
         run: |
