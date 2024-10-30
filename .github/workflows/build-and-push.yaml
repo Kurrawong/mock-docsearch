@@ -7,8 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Use full repository name which includes the owner
-  IMAGE_NAME: ${{ github.repository }}  # This will be owner/repo-name
+  # Convert repository name to lowercase
+  IMAGE_NAME: ${{ lower(github.repository) }}
   IMAGE_TAG: test
 
 jobs:
@@ -36,5 +36,6 @@ jobs:
 
       - name: Push to GHCR
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          IMAGE_PATH=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}/$IMAGE_PATH:latest
+          docker push ${{ env.REGISTRY }}/$IMAGE_PATH:latest
